@@ -19,10 +19,12 @@ rel2 = LED(19)
 rel3 = LED(26)
 
 def exec_command(cmd):
-    if cmd == "/accendi":
+    global status
+    if cmd == "/accendi" and status == 0:
         turn_on()
-    elif cmd == "/spegni":
+    elif cmd == "/spegni" and status == 1:
         turn_off()
+    # TODO: check if success?
     return True
 
 def turn_on():
@@ -52,6 +54,7 @@ def handle_command(message):
             result = get_status()
             bot.reply_to(message, result)
         else:
+            # TODO: refactor code to check if already on/off when the bot receives a command
             result = exec_command(message.text)
             bot.reply_to(message, "Effettuato" if result else "Errore")
     else:
