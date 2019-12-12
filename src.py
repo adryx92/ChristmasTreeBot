@@ -6,57 +6,74 @@ from gpiozero import LED
 TOKEN = "MYTOKEN"
 MESSAGE_UNKNOWN_USER = "Non sei autorizzato a utilizzare questo Bot"
 MESSAGE_HELP = "Usa i comandi /accendi, /spegni e /stato per utilizzare il Bot"
-USER_FRA = 1234
-USER_PINU = 1234
-USER_ANTO = 1234
-AUTH_USERS = [USER_FRA, USER_PINU, USER_ANTO]
+MESSAGE_WARN_STATUS = "Albero"
+MESSAGE_CONFIRMATION = "Effettuato"
+MESSAGE_STATUS_ON = "acceso"
+MESSAGE_STATUS_OFF = "spento"
+CMD_ON = "/accendi"
+CMD_OFF = "/spegni"
+CMD_STATUS = "/stato"
+CMD_HELP = "/help"
+CMD_START = "/start"
+ACCEPTED_COMMANDS = ['start', 'help', 'accendi', 'spegni', 'stato']
 bot = telebot.TeleBot(TOKEN)
-
-status = 0
-
 rel1 = LED(13)
 rel2 = LED(19)
 rel3 = LED(26)
 
+# users auth
+USER_FRA = 1234
+USER_PINU = 1234
+USER_ANTO = 1234
+AUTH_USERS = [USER_FRA, USER_PINU, USER_ANTO]
+
+# global vars
+_status = 0
+_lastUserAction = None
+
+
 def exec_command(cmd):
-    global status
-    if cmd == "/accendi" and status == 0:
+    if cmd == CMD_ON:
         turn_on()
-    elif cmd == "/spegni" and status == 1:
+    elif cmd == CMD_OFF:
         turn_off()
-    # TODO: check if success?
-    return True
 
 def turn_on():
     rel1.on()
     rel2.on()
     rel3.on()
-    global status
-    status = 1 
+    global _status
+    _status = 1
     
 def turn_off():
     rel1.off()
     rel2.off()
     rel3.off()
-    global status
-    status = 0
+    global _status
+    _status = 0
 
-def get_status():
-    return "Acceso" if status == 1 else "Spento"
+def get_status_str():
+    global _status
+    return MESSAGE_STATUS_ON if _status == 1 else MESSAGE_STATUS_OFF
 
 # bot commands
-@bot.message_handler(commands=['start', 'help', 'accendi', 'spegni', 'stato'])
+@bot.message_handler(commands=ACCEPTED_COMMANDS)
 def handle_command(message):
+    global _lastUserAction
+
     if message.from_user.id in AUTH_USERS:
-        if (message.text == '/start' or message.text == '/help'):
+        if (message.text == CMD_START or message.text == CMD_HELP):
             bot.reply_to(message, MESSAGE_HELP)
-        elif (message.text == "/stato"):
-            result = get_status()
-            bot.reply_to(message, result)
+        elif (message.text == CMD_STATUS):
+            # method .title() capitalizes the first letter in a string
+            bot.reply_to(message, get_status_str().title())
         else:
-            # TODO: refactor code to check if already on/off when the bot receives a command
-            result = exec_command(message.text)
-            bot.reply_to(message, "Effettuato" if result else "Errore")
+            if (message.text == CMD_ON and _status == 1 or message.text == CMD_OFF and _status == 0):
+                bot.reply_to(message, '{} {} da {}'.format(MESSAGE_WARN_STATUS, get_status_str(), _lastUserAction.first_name))
+            else:
+                exec_command(message.text)
+                _lastUserAction = message.from_user
+                bot.reply_to(message, MESSAGE_CONFIRMATION)
     else:
         bot.reply_to(message, MESSAGE_UNKNOWN_USER)
 
