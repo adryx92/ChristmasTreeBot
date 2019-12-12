@@ -1,6 +1,7 @@
 import telebot
 from telebot import types
 from gpiozero import LED
+import emoji
 
 # constants definition
 TOKEN = "MYTOKEN"
@@ -54,7 +55,10 @@ def turn_off():
 
 def get_status_str():
     global _status
-    return MESSAGE_STATUS_ON if _status == 1 else MESSAGE_STATUS_OFF
+    if _status == 1:
+        return MESSAGE_STATUS_ON + " " + emoji.emojize(":bulb::bulb::bulb:", use_aliases=True)
+    else:
+        return MESSAGE_STATUS_OFF + " " + emoji.emojize(":red_circle:")
 
 # bot commands
 @bot.message_handler(commands=ACCEPTED_COMMANDS)
