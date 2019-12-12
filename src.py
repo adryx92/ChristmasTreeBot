@@ -6,7 +6,7 @@ from gpiozero import LED
 TOKEN = "MYTOKEN"
 MESSAGE_UNKNOWN_USER = "Non sei autorizzato a utilizzare questo Bot"
 MESSAGE_HELP = "Usa i comandi /accendi, /spegni e /stato per utilizzare il Bot"
-MESSAGE_WARN_STATUS = "Albero"
+MESSAGE_WARN_STATUS = "Albero già"
 MESSAGE_CONFIRMATION = "Effettuato"
 MESSAGE_STATUS_ON = "acceso"
 MESSAGE_STATUS_OFF = "spento"
