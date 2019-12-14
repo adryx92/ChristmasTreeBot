@@ -7,4 +7,4 @@
 * The GPIO Zero API should be installed by default on Raspbian. If not, follow [these instructions](https://gpiozero.readthedocs.io/en/stable/installing.html).
 * Install the [emoji library](https://pypi.org/project/emoji/) typing <code>pip install emoji --upgrade</code>.
 * Make your script executable with the command <code>chmod u+x mySrcFile.py</code>.
-* Add a cron to automatilcally start the Bot when the system boots up typing <code>@reboot python3 /path/to/mySrcFile.py &</code>.
+* Configure a cron to automatilcally start the Bot when the system boots up typing <code>crontab -e</code> and adding <code>@reboot python3 /path/to/mySrcFile.py &</code>.
