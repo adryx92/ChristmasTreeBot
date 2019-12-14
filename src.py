@@ -1,6 +1,7 @@
 import telebot
 from telebot import types
 from gpiozero import LED
+from threading import Timer
 import emoji
 
 # constants definition
@@ -16,7 +17,8 @@ CMD_OFF = "/spegni"
 CMD_STATUS = "/stato"
 CMD_HELP = "/help"
 CMD_START = "/start"
-ACCEPTED_COMMANDS = ['start', 'help', 'accendi', 'spegni', 'stato']
+CMD_TIMER = "/timer"
+ACCEPTED_COMMANDS = ['start', 'help', 'accendi', 'spegni', 'stato', 'timer']
 bot = telebot.TeleBot(TOKEN)
 rel1 = LED(13)
 rel2 = LED(19)
@@ -38,6 +40,8 @@ def exec_command(cmd):
         turn_on()
     elif cmd == CMD_OFF:
         turn_off()
+    elif cmd == CMD_TIMER:
+        timer()
 
 def turn_on():
     rel1.on()
@@ -52,6 +56,15 @@ def turn_off():
     rel3.off()
     global _status
     _status = 0
+    
+def timer():
+    global _status
+    if(_status == 0):
+        turn_on()
+    # after 10 seconds, turn it off
+    t = Timer(10.0, turn_off)
+    t.start()
+    
 
 def get_status_str():
     global _status
