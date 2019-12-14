@@ -56,7 +56,7 @@ def turn_off():
 def get_status_str():
     global _status
     if _status == 1:
-        return MESSAGE_STATUS_ON + " " + emoji.emojize(":bulb::bulb::bulb:", use_aliases=True)
+        return MESSAGE_STATUS_ON + " " + emoji.emojize(":bulb:", use_aliases=True)
     else:
         return MESSAGE_STATUS_OFF + " " + emoji.emojize(":red_circle:")
 
@@ -77,7 +77,7 @@ def handle_command(message):
             else:
                 exec_command(message.text)
                 _lastUserAction = message.from_user
-                bot.reply_to(message, MESSAGE_CONFIRMATION)
+                bot.reply_to(message, MESSAGE_CONFIRMATION + " " + emoji.emojize(":white_check_mark:", use_aliases=True))
     else:
         bot.reply_to(message, MESSAGE_UNKNOWN_USER)
 
