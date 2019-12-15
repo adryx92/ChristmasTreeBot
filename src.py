@@ -79,8 +79,7 @@ def handle_command(message):
         bot.reply_to(message, MESSAGE_UNKNOWN_USER)
         # logging info on the unknown user
         logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
-        unknown_user = message.from_user
-        curDate = datetime.datetime.now().strftime("%d %B %Y--%I:%M%p")
-        logging.info(" REQUEST_TIME [" + curDate + "], USER_ID [" + str(unknown_user.id) + "], USERNAME [" + unknown_user.username + "]")
+        curDate = datetime.datetime.now().strftime("%A %Y/%m/%d - %T")
+        logging.info(" REQUEST_TIME [" + curDate + "], USER [" + str(message.from_user) + "]")
 
 bot.polling()
