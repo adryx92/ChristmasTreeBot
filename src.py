@@ -21,9 +21,7 @@ CMD_HELP = "/help"
 CMD_START = "/start"
 ACCEPTED_COMMANDS = ['start', 'help', 'accendi', 'spegni', 'stato']
 bot = telebot.TeleBot(TOKEN)
-rel1 = LED(13)
-rel2 = LED(19)
-rel3 = LED(26)
+rel1 = LED(26)
 
 # users auth
 USER_FRA = 1234
@@ -44,15 +42,11 @@ def exec_command(cmd):
 
 def turn_on():
     rel1.on()
-    rel2.on()
-    rel3.on()
     global _status
     _status = 1
     
 def turn_off():
     rel1.off()
-    rel2.off()
-    rel3.off()
     global _status
     _status = 0
 
