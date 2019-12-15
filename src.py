@@ -1,6 +1,5 @@
 import telebot
-import json
-import urllib.request
+import datetime
 import logging
 from telebot import types
 from gpiozero import LED
@@ -15,7 +14,6 @@ MESSAGE_CONFIRMATION = "Effettuato"
 MESSAGE_STATUS_ON = "acceso"
 MESSAGE_STATUS_OFF = "spento"
 LOG_FILENAME = "unknown_users.log"
-WEBSERVICE_URL = 'https://api.telegram.org/bot'+TOKEN+'/getUpdates' 
 CMD_ON = "/accendi"
 CMD_OFF = "/spegni"
 CMD_STATUS = "/stato"
@@ -37,8 +35,6 @@ AUTH_USERS = [USER_FRA, USER_PINU, USER_ANTO]
 _status = 0
 _lastUserAction = None
 
-# logging
-logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
 
 def exec_command(cmd):
     if cmd == CMD_ON:
@@ -87,11 +83,10 @@ def handle_command(message):
                 bot.reply_to(message, MESSAGE_CONFIRMATION + " " + emoji.emojize(":white_check_mark:", use_aliases=True))
     else:
         bot.reply_to(message, MESSAGE_UNKNOWN_USER)
-        # logging info on unknown user
-        json_resp = urllib.request.urlopen(WEBSERVICE_URL)
-        py_resp = json.loads(json_resp.read())
-        messages = py_resp['result']
-        last_message = messages[0]
-        logging.info(last_message['message'])
+        # logging info on the unknown user
+        logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
+        unknown_user = message.from_user
+        curDate = datetime.datetime.now().strftime("%d %B %Y--%I:%M%p")
+        logging.info(" REQUEST_TIME [" + curDate + "], USER_ID [" + str(unknown_user.id) + "], USERNAME [" + unknown_user.username + "]")
 
 bot.polling()
