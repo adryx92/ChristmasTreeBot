@@ -9,7 +9,6 @@ import emoji
 TOKEN = "MYTOKEN"
 MESSAGE_UNKNOWN_USER = "Non sei autorizzato a utilizzare questo Bot"
 MESSAGE_HELP = "Usa i comandi /accendi, /spegni e /stato per utilizzare il Bot"
-MESSAGE_WARN_STATUS = "Albero già"
 MESSAGE_CONFIRMATION = "Effettuato"
 MESSAGE_STATUS_ON = "acceso"
 MESSAGE_STATUS_OFF = "spento"
@@ -66,11 +65,13 @@ def handle_command(message):
         if (message.text == CMD_START or message.text == CMD_HELP):
             bot.reply_to(message, MESSAGE_HELP)
         elif (message.text == CMD_STATUS):
-            # method .title() capitalizes the first letter in a string
-            bot.reply_to(message, get_status_str().title())
+            if (_lastUserAction != None):
+                bot.reply_to(message, 'Albero {} da {}'.format(get_status_str(), _lastUserAction.first_name))
+            else:
+                bot.reply_to(message, get_status_str().title())
         else:
-            if (message.text == CMD_ON and _status == 1 or message.text == CMD_OFF and _status == 0):
-                bot.reply_to(message, '{} {} da {}'.format(MESSAGE_WARN_STATUS, get_status_str(), _lastUserAction.first_name))
+            if ((message.text == CMD_ON and _status == 1) or (message.text == CMD_OFF and _status == 0) and _lastUserAction != None):
+                bot.reply_to(message, 'Albero già {} da {}'.format(get_status_str(), _lastUserAction.first_name))
             else:
                 exec_command(message.text)
                 _lastUserAction = message.from_user
