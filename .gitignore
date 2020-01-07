@@ -1,4 +1,4 @@
 .vscode/
 unknown_users.log
-# don't worry about this
+users.log
 realSrc.py
