@@ -12,7 +12,8 @@ MESSAGE_HELP = "Usa i comandi /accendi, /spegni e /stato per utilizzare il Bot"
 MESSAGE_CONFIRMATION = "Effettuato"
 MESSAGE_STATUS_ON = "acceso"
 MESSAGE_STATUS_OFF = "spento"
-LOG_FILENAME = "unknown_users.log"
+UNKNOWN_LOG_FILENAME = "unknown_users.log"
+LOG_FILENAME = "users.log"
 CMD_ON = "/accendi"
 CMD_OFF = "/spegni"
 CMD_STATUS = "/stato"
@@ -61,6 +62,8 @@ def get_status_str():
 def handle_command(message):
     global _lastUserAction
 
+    curDate = datetime.datetime.now().strftime("%A %Y/%m/%d - %T")
+
     if message.from_user.id in AUTH_USERS:
         if (message.text == CMD_START or message.text == CMD_HELP):
             bot.reply_to(message, MESSAGE_HELP)
@@ -76,11 +79,15 @@ def handle_command(message):
                 exec_command(message.text)
                 _lastUserAction = message.from_user
                 bot.reply_to(message, MESSAGE_CONFIRMATION + " " + emoji.emojize(":white_check_mark:", use_aliases=True))
+
+        # logging known users
+        logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
     else:
         bot.reply_to(message, MESSAGE_UNKNOWN_USER)
-        # logging info on the unknown user
-        logging.basicConfig(filename=LOG_FILENAME, level=logging.INFO)
-        curDate = datetime.datetime.now().strftime("%A %Y/%m/%d - %T")
-        logging.info(" REQUEST_TIME [" + curDate + "], USER [" + str(message.from_user) + "]")
+
+        # logging unknown users
+        logging.basicConfig(filename=UNKNOWN_LOG_FILENAME, level=logging.INFO)
+
+    logging.info(" DATE [" + curDate + "], USER [" + str(message.from_user) + "], MSG [" + message.text + "]")
 
 bot.polling()
