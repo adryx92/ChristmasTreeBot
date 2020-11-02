@@ -3,7 +3,7 @@
 ## About
 This is a DIY project to use a Raspberry Pi running a Telegram Bot to turn on and off your Christmas tree.
 
-Yes, this is an old probject and a smart plug is simpler... But not that funny!
+Yes, this is an old project and a smart plug is simpler... But not that funny!
 
 ## Installation
 
