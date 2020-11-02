@@ -10,7 +10,7 @@ Yes, this is an old project and a smart plug is simpler... But not that funny!
 ### Automatic Instructions
 * Make the setup script executable with <code>chmod +x install.sh</code>.
 * Run the script elevated <code>sudo ./install.sh</code>.
-* Add a cron to automaticallu start the bot, as explained in the Manual section.
+* Add a cron to automaticallu start the bot, as explained in the [Manual Instructions](https://github.com/adryx92/ChristmasTreeBot#manual-instructions).
 
 ### Manual Instructions
 * First of all make sure you have installed Python3 typing <code>python3 --version</code> in the shell. If not, install it with <code>apt install python3</code>.
