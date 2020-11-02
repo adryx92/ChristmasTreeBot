@@ -1,4 +1,4 @@
-# AlberoDiNatateBot
+# ChristmasTreeBot
 
 ## About
 This is a DIY project to use a Raspberry Pi running a Telegram Bot to turn on and off your Christmas tree.
