@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import telebot
 import datetime
 import logging
