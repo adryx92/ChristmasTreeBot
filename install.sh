@@ -25,7 +25,7 @@ start_installation() {
         if [ $? -eq 0 ]; then
             printf "  %b %s installed\\n\\n" "${TICK}" "pip"
         else
-            return 0
+            return 1
         fi
     fi
 
@@ -34,7 +34,7 @@ start_installation() {
     if [ $? -eq 0 ]; then
         printf "  %b %s installed\\n\\n" "${TICK}" "pyTelegramBotAPI"
     else
-        return 0
+        return 1
     fi
     
 
@@ -43,7 +43,7 @@ start_installation() {
     if [ $? -eq 0 ]; then
         printf "  %b %s installed\\n\\n" "${TICK}" "emoji"
     else
-        return 0
+        return 1
     fi
 
     printf "\\n  %b Installing %s library\\n" "${INFO}" "python3-gpiozero"
@@ -51,10 +51,10 @@ start_installation() {
     if [ $? -eq 0 ]; then
         printf "  %b %s installed\\n\\n" "${TICK}" "python3-gpiozero"
     else
-        return 0
+        return 1
     fi
 
-    return 1
+    return 0
 }
 
 setup_permissions() {
@@ -68,7 +68,7 @@ if [[ "${EUID}" -eq 0 ]]; then
     printf "\\n  %b Running elevated. Starting installation... %s\\n\\n" "${TICK}"
 
     start_installation
-    if [ $? -eq 1 ]; then
+    if [ $? -eq 0 ]; then
         setup_permissions
         printf "\\n\\n  %b Don't forget to add a cron to automatically start the bot!\\n" "${WARN}"
         printf "  %b Installation complete\\n\\n" "${TICK}"
