@@ -1,15 +1,22 @@
 #!/usr/bin/python3
 
 import telebot
-import datetime
-import logging
 import emoji
 
 # project dependencies
 import const
-import rest
+from rest import RestManager
+from db import DatabaseHandler
 
-bot = telebot.TeleBot(const.TOKEN)
+# users auth
+TOKEN = "MYTOKEN"
+bot = telebot.TeleBot(TOKEN)
+
+db_handler = DatabaseHandler()
+users_list = db_handler.get_users_list()
+endpoint_list = db_handler.get_targets_list()
+
+rest = RestManager(endpoint_list)
 
 # global vars
 _lastUserAction = None
@@ -74,18 +81,16 @@ def handle_custom_keyboard(message):
 				bot.send_message(message.chat.id, const.MESSAGE_STATUS_OFF + " " + emoji.emojize(":white_check_mark:", language='alias'))
 
 			_lastUserAction = message.from_user
+			db_handler.add_log(message.from_user.id, str(message.from_user), message.text)
 
 # command messages handler
 @bot.message_handler(commands=const.ACCEPTED_COMMANDS)
 def handle_command(message):
 	global _lastUserAction
 
-	curDate = datetime.datetime.now().strftime("%Y/%m/%d - %T")
-
-	if message.from_user.id not in const.AUTH_USERS:
+	if message.from_user.id not in users_list:
 		bot.reply_to(message, const.MESSAGE_UNKNOWN_USER)
-		logging.basicConfig(filename=const.UNKNOWN_LOG_FILENAME)
-		logging.warning(f"[{curDate}] - USER {str(message.from_user)}] - MSG \"{message.text}\"")
+		db_handler.add_log(message.from_user.id, str(message.from_user), message.text)
 		return
 	
 	command = message.text
@@ -95,7 +100,6 @@ def handle_command(message):
 	elif command == "/" + const.CMD_STOP:
 		bot.reply_to(message, "Usa /start per riavviare", reply_markup=remove_custom_keyboard())
 
-	logging.basicConfig(filename=const.LOG_FILENAME)
-	logging.warning(f"[{curDate}] - USER {str(message.from_user)}] - MSG \"{message.text}\"")
+	db_handler.add_log(message.from_user.id, str(message.from_user), message.text)
 
 bot.infinity_polling()

@@ -1,3 +1,5 @@
 .vscode/
 unknown_users.log
 users.log
+pybot.db
+__pycache__
